@@ -1,0 +1,4 @@
+    $ source setup_env.sh
+    $ docker-compose build
+    $ docker-compose up airflow-init
+    $ docker-compose up -d
