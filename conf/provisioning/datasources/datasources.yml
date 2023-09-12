@@ -1,19 +1,19 @@
 apiVersion: 1
 
 deleteDatasources:
-  - name: aura-influxDB
+  - name: mlops-influxDB
     orgId: 1
 datasources:
-  - name: aura-influxDB
+  - name: mlops-influxDB
     orgId: 1
     type: influxdb
     access: proxy
     url: http://influxdb:8086
     database: hackathon
     user: admin
-    password: auraadmin
+    password: admin
     editable: true
-  - name: aura-postgres
+  - name: mlops-postgres
     orgId: 1
     type: postgres
     url: postgres:5432

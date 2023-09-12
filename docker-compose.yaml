@@ -75,7 +75,7 @@ services:
     volumes:
       - grafana-storage:/var/lib/grafana
       - ./conf/provisioning:/etc/grafana/provisioning
-      - ./conf/grafana.ini:/etc/grafana/grafana.ini
+      # - ./conf/grafana.ini:/etc/grafana/grafana.ini
     depends_on:
       # - influxdb
       - postgres

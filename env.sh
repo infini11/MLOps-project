@@ -1,7 +1,7 @@
 # InfluxDB env vars
-export INFLUXDB_USERNAME=admin
-export INFLUXDB_PASSWORD=admin
-export INFLUXDB_DATABASE=hackathon
+# export INFLUXDB_USERNAME=admin
+# export INFLUXDB_PASSWORD=admin
+# export INFLUXDB_DATABASE=hackathon
 
 # Grafana env vars
 export GRAFANA_USERNAME=admin
