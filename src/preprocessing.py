@@ -33,7 +33,7 @@ def load_all_data(names_files: list) -> tuple[pd.DataFrame, pd.DataFrame, pd.Dat
     df_store = pd.read_csv(os.path.join(BASE_PATH, names_files[1]))
     df_sales = pd.read_csv(os.path.join(BASE_PATH, names_files[2]), parse_dates=["Date"])
     
-    return (df_feature,  df_store, df_sales)
+    return (df_feature, df_store, df_sales)
 
 
 def group_by_feature_by_date(df_feature: pd.DataFrame) -> pd.DataFrame:
@@ -55,8 +55,40 @@ def group_by_feature_by_date(df_feature: pd.DataFrame) -> pd.DataFrame:
 
     return temp_date_data
 
-def data_inputation(df: pd.DataFrame) -> None:
-    pass
+
+def group_by_sales_by_date(df_sales: pd.DataFrame) -> pd.DataFrame:
+    """aims to group by date and compute agg using sum
+
+    Args:
+        df_sales (pd.DataFrame): sales dataframe
+
+    Returns:
+        pd.DataFrame: return aggregated data
+    """
+    data_sales_date = df_sales.groupby("Date").agg({"Weekly_Sales":"sum"})
+    data_sales_date.sort_index(inplace=True)
+
+    return data_sales_date
+
+
+def merge_feature_and_sales(df_feature: pd.DataFrame, df_sales: pd.DataFrame) -> pd.DataFrame:
+    """Will merge feature and sales on indexes
+
+    Args:
+        df_feature (pd.DataFrame): features aggregated data
+        df_sales (pd.DataFrame): sales aggregated data
+
+    Returns:
+        pd.DataFrame: merged dataframe
+    """
+    df_sales.Weekly_Sales = df_sales.Weekly_Sales/1000000 #convert weekly sales in million
+    df_sales.Weekly_Sales = df_sales.Weekly_Sales.apply(int)
+    df_sales_features = pd.merge(df_sales, df_feature, left_index=True, right_index=True, how='left')
+    df_sales_features["IsHoliday"] = df_sales_features["IsHoliday"].apply(lambda x: True if x == 45.0 else False )
+
+    return df_sales_features
+
+
 
 def transform_data(df: pd.DataFrame) -> None:
     pass
