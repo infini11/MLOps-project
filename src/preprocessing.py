@@ -17,8 +17,6 @@ import xgboost as xgb
 import lightgbm as lgb
 
 
-
-
 def load_all_data(names_files: list) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """aim to load all data
 
@@ -89,6 +87,35 @@ def merge_feature_and_sales(df_feature: pd.DataFrame, df_sales: pd.DataFrame) ->
     return df_sales_features
 
 
+def agg_store_on_temp_fuel_price_holiday(df_store: pd.DataFrame, df_feature: pd.DataFrame, df_sales: pd.DataFrame) -> pd.DataFrame:
+    """scall columns (temperature, fuel price) in df_store by mean, (weekly_sales and isholliday by sum)
+
+    Args:
+        df_sales (pd.DataFrame) : sales dataframe
+        df_store (pd.DataFrame): store dataframe
+        df_features (pd.DataFrame): features dataframe
+
+    Returns:
+        pd.DataFrame: scalled dataframe
+    """
+    data_Store = df_feature.groupby("Store").agg(
+        {
+            "Temperature": "mean", 
+            "Fuel_Price": "mean", 
+            "IsHoliday": "sum"
+        }
+    )
+
+    temp_store = df_sales.groupby("Store").agg({"Weekly_Sales":"sum"})
+    temp_store.Weekly_Sales = temp_store.Weekly_Sales/1000000
+    temp_store.Weekly_Sales = temp_store.Weekly_Sales.apply(int)
+    data_Store.set_index(np.arange(0,45),inplace=True)
+    df_store["Temperature"] = data_Store.Temperature
+    df_store["Fuel_Price"] = data_Store.Fuel_Price
+    df_store["Holiday"] = data_Store.IsHoliday
+    df_store["Weekly_Sales"] = temp_store.Weekly_Sales
+
+    return df_store
 
 def transform_data(df: pd.DataFrame) -> None:
     pass
