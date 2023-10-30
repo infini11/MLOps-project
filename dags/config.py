@@ -11,6 +11,9 @@ DATA_FOLDER = os.path.join(PROJECT_FOLDER, 'data')
 
 ML_DATASET_OUTPUT_FOLDER = "/opt/airflow/output"
 AIRFLOW_PREFIX_TO_DATA = '/opt/airflow/data/'
+FEATURE_FILE = 'Features data set.csv'
+STORE_FILE = 'stores data-set.csv'
+SALES_FILE = 'sales data-set.csv'
 MLRUNS_DIR = '/mlruns'
 
 TRAIN_DATA = os.path.join(AIRFLOW_PREFIX_TO_DATA, "train/df_ml_train.csv")

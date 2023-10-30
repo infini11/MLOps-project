@@ -17,19 +17,20 @@ import xgboost as xgb
 import lightgbm as lgb
 
 
-def load_all_data(names_files: list) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def load_all_data(basepath: str, names_files: list) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """aim to load all data
 
     Args:
         names_files (list): name of data sources
+        basepath (str) : base path
 
     Returns:
         tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]: 3 dataframe that contains different parts of the dataset
     """
-    BASE_PATH = '' #constant to be created
-    df_feature = pd.read_csv(os.path.join(BASE_PATH, names_files[0]), parse_dates=["Date"])
-    df_store = pd.read_csv(os.path.join(BASE_PATH, names_files[1]))
-    df_sales = pd.read_csv(os.path.join(BASE_PATH, names_files[2]), parse_dates=["Date"])
+     #constant to be created
+    df_feature = pd.read_csv(os.path.join(basepath, names_files[0]), parse_dates=["Date"])
+    df_store = pd.read_csv(os.path.join(basepath, names_files[1]))
+    df_sales = pd.read_csv(os.path.join(basepath, names_files[2]), parse_dates=["Date"])
     
     return (df_feature, df_store, df_sales)
 
@@ -204,7 +205,7 @@ def create_columns_and_convert_categorical_data(data_table: pd.DataFrame) -> pd.
     Returns:
         pd.DataFrame: transformed data
     """
-    data_table['IsHoliday'] = data_table['IsHoliday'].map({True:0,False:1})
+    data_table['IsHoliday'] = data_table['IsHoliday'].map({True:0, False:1})
     data_table["Month"] = data_table.Date.dt.month
     data_table["Year"] = data_table.Date.dt.year
     data_table["WeekofYear"] = data_table.Date.dt.weekofyear
@@ -215,10 +216,68 @@ def create_columns_and_convert_categorical_data(data_table: pd.DataFrame) -> pd.
     
     return data_table
 
+def data_processing(base_path: str, 
+                    names_files: list, 
+                    col_to_impute: list, 
+                    cols_: list) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
 
-def data_processing_with_io(df: pd.DataFrame) -> None:
-    pass
+    df_feature, df_store, df_sales = load_all_data(base_path, names_files)
+
+    #TBC
+    # df_agg_feature_by_date = group_by_feature_by_date(df_feature=df_feature)
+    # df_agg_sales_by_date = group_by_sales_by_date(df_sales=df_sales)
+    # df_feature_agg_sales_agg = merge_feature_and_sales(
+    #     df_feature=df_agg_feature_by_date,
+    #     df_sales=df_agg_sales_by_date
+    # )
+
+    df_scalled_store = agg_store_on_temp_fuel_price_holiday(
+        df_store=df_store,
+        df_feature=df_feature,
+        df_sales=df_sales
+    )
+
+    data_table = dataset_construction(
+        df_sales=df_sales,
+        df_feature=df_feature,
+        df_store=df_scalled_store
+    )
+
+    data_table_imputed_markdown = markdown_data_imputation(
+        data_table=data_table,
+        col_to_impute=col_to_impute
+    )
+
+    data_table_compltete_imputed = data_imputation_by_mean(
+        data_table=data_table_imputed_markdown,
+        cols=cols_
+    )
+    
+    data_table_with_new_features = create_columns_and_convert_categorical_data(
+        data_table=data_table_compltete_imputed
+    )
+
+    #convert from Fahrenheit to Celcus
+    data_table_with_new_features['Temperature'] = (data_table_with_new_features['Temperature']- 32) * 5./9.
+
+    # creating train and test data
+    data_train = data_table_with_new_features[data_table_with_new_features.Weekly_Sales.notnull()]
+    data_test = data_table_with_new_features[data_table_with_new_features.Weekly_Sales.isnull()]
+
+    return data_table_with_new_features, data_train, data_test
 
 
-def data_processing(df: pd.DataFrame) -> None:
-    pass
+def data_processing_with_io(base_path: str, 
+                    names_files: list, 
+                    col_to_impute: list, 
+                    cols_: list) -> None:
+    
+    data_table, data_train, data_test = data_processing(base_path=base_path, 
+        names_files=names_files, 
+        col_to_impute=col_to_impute, 
+        cols_=cols_
+    )
+
+    data_table.to_csv('', index=False)
+    data_train.to_csv('', index=False)
+    data_test.to_csv('', index=False)
