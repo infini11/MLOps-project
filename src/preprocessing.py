@@ -92,8 +92,8 @@ def merge_feature_and_sales(df_feature: pd.DataFrame, df_sales: pd.DataFrame) ->
     return df_sales_features
 
 
-def agg_store_on_temp_fuel_price_holiday(df_store: pd.DataFrame, 
-                                         df_feature: pd.DataFrame, 
+def agg_store_on_temp_fuel_price_holiday(df_store: pd.DataFrame,
+                                         df_feature: pd.DataFrame,
                                          df_sales: pd.DataFrame
                                         ) -> pd.DataFrame:
     """scall columns (temperature, fuel price) in df_store by mean, (weekly_sales and isholliday by sum)
@@ -216,9 +216,9 @@ def create_columns_and_convert_categorical_data(data_table: pd.DataFrame) -> pd.
     
     return data_table
 
-def data_processing(base_path: str, 
-                    names_files: list, 
-                    col_to_impute: list, 
+def data_processing(base_path: str,
+                    names_files: list,
+                    col_to_impute: list,
                     cols_: list) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
 
     df_feature, df_store, df_sales = load_all_data(base_path, names_files)
@@ -267,17 +267,19 @@ def data_processing(base_path: str,
     return data_table_with_new_features, data_train, data_test
 
 
-def data_processing_with_io(base_path: str, 
-                    names_files: list, 
-                    col_to_impute: list, 
-                    cols_: list) -> None:
+def data_processing_with_io(base_path: str,
+                    names_files: list,
+                    col_to_impute: list,
+                    cols_: list,
+                    output_path: str
+                    ) -> None:
     
-    data_table, data_train, data_test = data_processing(base_path=base_path, 
-        names_files=names_files, 
-        col_to_impute=col_to_impute, 
+    data_table, data_train, data_test = data_processing(base_path=base_path,
+        names_files=names_files,
+        col_to_impute=col_to_impute,
         cols_=cols_
     )
 
-    data_table.to_csv('', index=False)
-    data_train.to_csv('', index=False)
-    data_test.to_csv('', index=False)
+    data_table.to_csv(os.path.join(output_path, 'preprocess_dataset'), index=False)
+    data_train.to_csv(os.path.join(output_path, 'train/train.csv'), index=False)
+    data_test.to_csv(os.path.join(output_path, 'test/test.csv'), index=False)

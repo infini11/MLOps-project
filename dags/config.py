@@ -11,17 +11,16 @@ DATA_FOLDER = os.path.join(PROJECT_FOLDER, 'data')
 
 ML_DATASET_OUTPUT_FOLDER = "/opt/airflow/output"
 AIRFLOW_PREFIX_TO_DATA = '/opt/airflow/data/'
-FEATURE_FILE = 'Features data set.csv'
-STORE_FILE = 'stores data-set.csv'
-SALES_FILE = 'sales data-set.csv'
+NAME_FILES = ['Features data set.csv', 'stores data-set.csv', 'sales data-set.csv']
 MLRUNS_DIR = '/mlruns'
 
-TRAIN_DATA = os.path.join(AIRFLOW_PREFIX_TO_DATA, "train/df_ml_train.csv")
-TEST_DATA = os.path.join(AIRFLOW_PREFIX_TO_DATA , "test/df_ml_test.csv")
-FEATURE_TRAIN_PATH= os.path.join(ML_DATASET_OUTPUT_FOLDER, "ml_train.csv")
-FEATURE_TEST_PATH= os.path.join(ML_DATASET_OUTPUT_FOLDER, "ml_test.csv")
+COL_TO_IMPUTE = ["MarkDown1", "MarkDown2", "MarkDown3", "MarkDown4", "MarkDown5"]
+COLS_IMPUTE_BY_MEAN = ["CPI", "Unemployment"]
 
-START_DATE = dt(2021, 8, 1)
+TRAIN_DATA = os.path.join(AIRFLOW_PREFIX_TO_DATA, "train/train.csv")
+TEST_DATA = os.path.join(AIRFLOW_PREFIX_TO_DATA , "test/test.csv")
+
+START_DATE = dt(2023, 10, 30)
 CONCURRENCY = 4
 SCHEDULE_INTERVAL = datetime.timedelta(hours=6)
 DEFAULT_ARGS = {'owner': 'airflow'}
