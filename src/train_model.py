@@ -56,20 +56,18 @@ def train(tracking_uri: str, models_params: dict, data : list) -> pd.DataFrame:
 
     mlflow.set_tracking_uri(tracking_uri)
 
-    with mlflow.start_run():
+    X_train, X_test, y_train, y_test = data
 
-        X_train, X_test, y_train, y_test = data
-
-        name = []
-        score = []
-        models = []
-        rmse = []
-
-        for model_param in models_params:
-
-            grid_search = GridSearchCV(estimator=model_param['model'],
-                                    param_grid=model_param['grid_parameters'],
-                                    scoring='rmse',
+    name = []
+    score = []
+    models = []
+    rmse = []
+    i = 0
+    for model_param in models_params:
+        with mlflow.start_run():
+            grid_search = GridSearchCV(estimator=models_params[model_param]['model'],
+                                    param_grid=models_params[model_param]['grid_parameters'],
+                                    scoring='neg_root_mean_squared_error',
                                     cv=5,
                                     verbose=5,
                                     n_jobs=-1
@@ -82,9 +80,10 @@ def train(tracking_uri: str, models_params: dict, data : list) -> pd.DataFrame:
             models.append(grid_search)
             rmse.append(np.sqrt(mean_squared_error(grid_search.predict(X_test), y_test)))
 
-            mlflow.log_param('best_param', grid_search.best_params_)
-            mlflow.log_param('rmse', np.sqrt(mean_squared_error(grid_search.predict(X_test), y_test)))
-            mlflow.log_param('score', grid_search.score(X_test, y_test))
+            mlflow.log_param('best_param_%s' % i, grid_search.best_params_)
+            mlflow.log_param('rmse_%s' % i, np.sqrt(mean_squared_error(grid_search.predict(X_test), y_test)))
+            mlflow.log_param('score_%s' % i, grid_search.score(X_test, y_test))
+            i=i+1
 
         df_score = pd.DataFrame(
             list(zip(name, rmse, score, models)),
