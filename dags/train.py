@@ -1,12 +1,14 @@
+import sys
+from airflow.decorators import dag, task
+
+sys.path.append('.')
+print(sys.path)
 from src.preprocessing import data_processing_with_io
 from src.train_model import *
 
-from dags.config import (DATA_FOLDER, ML_DATASET_OUTPUT_FOLDER, NAME_FILES, TRAIN_DATA, TEST_DATA, START_DATE,
+from config.config import (DATA_FOLDER, ML_DATASET_OUTPUT_FOLDER, NAME_FILES, TRAIN_DATA, TEST_DATA, START_DATE,
                          CONCURRENCY, SCHEDULE_INTERVAL, DEFAULT_ARGS, TRACKING_URI, COL_TO_IMPUTE, COLS_IMPUTE_BY_MEAN,
                          MODELS_PARAM)
-
-
-from airflow.decorators import dag, task
 
 @dag(default_args=DEFAULT_ARGS,
      start_date=START_DATE,
@@ -29,9 +31,9 @@ def training_dag():
                                 output_path=output_path)
 
 
-    @task
-    def training_model():
-        pass
+    # @task
+    # def training_model():
+    #     pass
 
 
     preprocessing_data(base_path=DATA_FOLDER,
@@ -40,4 +42,7 @@ def training_dag():
                        cols_=COLS_IMPUTE_BY_MEAN,
                        output_path=ML_DATASET_OUTPUT_FOLDER)
     
-    train_model()
+    # training_model()
+
+
+train_ml_dag = training_dag()

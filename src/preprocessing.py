@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from typing import Tuple
 import os
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -16,8 +17,12 @@ from sklearn.ensemble import GradientBoostingRegressor,AdaBoostRegressor,RandomF
 import xgboost as xgb
 import lightgbm as lgb
 
+import sys
 
-def load_all_data(basepath: str, names_files: list) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+sys.path.append('.')
+
+
+def load_all_data(basepath: str, names_files: list) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """aim to load all data
 
     Args:
@@ -219,7 +224,7 @@ def create_columns_and_convert_categorical_data(data_table: pd.DataFrame) -> pd.
 def data_processing(base_path: str,
                     names_files: list,
                     col_to_impute: list,
-                    cols_: list) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+                    cols_: list) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
 
     df_feature, df_store, df_sales = load_all_data(base_path, names_files)
 
