@@ -62,9 +62,9 @@ MODELS_PARAM = {
     'gradient_boost': {
         'model' : GradientBoostingRegressor(),
         'grid_parameters': {
-            "max_iter": [3, 10, 30, 100, 300],
+            "max_depth": [3, 10, 30],
             "max_leaf_nodes": [2, 5, 10, 20, 50, 100],
-            "learning_rate": loguniform(0.01, 1)
+            "learning_rate": [0.1, 0.01, 0.05]
         }
     },
     'ada_boost': {
@@ -86,13 +86,13 @@ MODELS_PARAM = {
     'lasso' : {
         'model' : Lasso(),
         'grid_parameters': {
-            'alpha': (np.logspace(-8, 8, 100))
+            'alpha': np.logspace(-8, 8, 100)
         }
     },
     'ridge_cv': {
         'model' : RidgeCV(),
         'grid_parameters': {
-            'alphas': [1e-3, 1e-2, 1e-1, 1]
+            'alphas': [1e-3, 1e-2, 1e-1]
         }
     },
     'svr': {

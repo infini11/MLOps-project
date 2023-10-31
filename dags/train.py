@@ -50,13 +50,13 @@ def training_dag():
                        names_files=NAME_FILES,
                        col_to_impute=COL_TO_IMPUTE,
                        cols_=COLS_IMPUTE_BY_MEAN,
-                       output_path=ML_DATASET_OUTPUT_FOLDER)
-    
+                       output_path=ML_DATASET_OUTPUT_FOLDER) >> \
     training_model_task(tracking_uri=TRACKING_URI,
                         models_params=MODELS_PARAM,
                         train_path=TRAIN_DATA,
                         test_path=TEST_DATA,
                         output_path=ML_DATASET_OUTPUT_FOLDER)
+
 
 
 train_ml_dag = training_dag()

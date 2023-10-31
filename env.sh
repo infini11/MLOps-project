@@ -36,3 +36,6 @@ export FLOWER_PORT=5555
 
 # DATA PATH
 export DATA_PATH='./data'
+
+# protobuf
+export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
