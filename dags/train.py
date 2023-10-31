@@ -18,7 +18,7 @@ from config.config import (DATA_FOLDER, ML_DATASET_OUTPUT_FOLDER, NAME_FILES, TR
 def training_dag():
 
     @task
-    def preprocessing_data(base_path: str,
+    def preprocessing_data_task(base_path: str,
                     names_files: list,
                     col_to_impute: list,
                     cols_: list,
@@ -36,7 +36,7 @@ def training_dag():
     #     pass
 
 
-    preprocessing_data(base_path=DATA_FOLDER,
+    preprocessing_data_task(base_path=DATA_FOLDER,
                        names_files=NAME_FILES,
                        col_to_impute=COL_TO_IMPUTE,
                        cols_=COLS_IMPUTE_BY_MEAN,

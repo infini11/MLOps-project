@@ -6,16 +6,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from fancyimpute import IterativeImputer
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import accuracy_score
-
-from sklearn.svm import SVR, LinearSVR, NuSVR
-from sklearn.linear_model import ElasticNet, Lasso, RidgeCV,LinearRegression
-from sklearn.kernel_ridge import KernelRidge
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import GradientBoostingRegressor,AdaBoostRegressor,RandomForestRegressor
-import xgboost as xgb
-import lightgbm as lgb
 
 import sys
 
@@ -225,6 +215,17 @@ def data_processing(base_path: str,
                     names_files: list,
                     col_to_impute: list,
                     cols_: list) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """process data before training
+
+    Args:
+        base_path (str): base dir
+        names_files (list): files to be loaded
+        col_to_impute (list): a list of columns to impute by using specific method
+        cols_ (list): a list of columns to impute by mean
+
+    Returns:
+        Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]: dataset, train data and test data
+    """
 
     df_feature, df_store, df_sales = load_all_data(base_path, names_files)
 
@@ -278,6 +279,15 @@ def data_processing_with_io(base_path: str,
                     cols_: list,
                     output_path: str
                     ) -> None:
+    """use the data_processing function and generate some artefact
+
+    Args:
+        base_path (str): base dir
+        names_files (list): file to be loaded
+        col_to_impute (list): a list of columns to impute by using specific method
+        cols_ (list): a list of columns to impute by mean
+        output_path (str): output dir to store result of preprocessing
+    """
     
     data_table, data_train, data_test = data_processing(base_path=base_path,
         names_files=names_files,
