@@ -55,7 +55,7 @@ def training_dag():
                         models_params=MODELS_PARAM,
                         train_path=TRAIN_DATA,
                         test_path=TEST_DATA,
-                        output_path=ML_DATASET_OUTPUT_FOLDER)
+        output_path=ML_DATASET_OUTPUT_FOLDER)
 
 
 

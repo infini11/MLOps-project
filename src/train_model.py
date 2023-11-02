@@ -89,6 +89,8 @@ def train(tracking_uri: str, models_params: dict, data : list) -> pd.DataFrame:
             models.append(grid_search)
             rmse.append(np.sqrt(mean_squared_error(grid_search.predict(X_test), y_test)))
 
+            mlflow.sklearn.log_model(grid_search, model_param)
+
             mlflow.log_param(type(grid_search.best_estimator_).__name__+'_best_param', grid_search.best_params_)
             mlflow.log_param(type(grid_search.best_estimator_).__name__+'_rmse', np.sqrt(mean_squared_error(grid_search.predict(X_test), y_test)))
             mlflow.log_param(type(grid_search.best_estimator_).__name__+'_score', grid_search.score(X_test, y_test))
@@ -144,6 +146,7 @@ def train_model(tracking_uri: str, models_params: dict, train_path : str, test_p
     df_score = train(tracking_uri=tracking_uri, models_params=models_params, data=[X_train, X_test, y_train, y_test])
 
     best_model_row = df_score.iloc[-1]
+
     # y_true = df_test['Weekly_Sales']
     # df_test.drop(['Weekly_Sales'], axis=1, inplace=True)
     # pred = best_model_row['model'].predict(df_test)

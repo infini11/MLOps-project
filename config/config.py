@@ -66,28 +66,28 @@ MODELS_PARAM = {
             "learning_rate": [0.1, 0.01, 0.05]
         }
     },
-    # 'ada_boost': {
-    #     'model' : AdaBoostRegressor(),
-    #     'grid_parameters': {
-    #         'learning_rate': [0.1, 0.01, 0.05],
-    #         'n_estimators': np.arange(3, 7, 2),
-    #         'loss' : ['linear', 'square', 'exponential']
-    #     }
-    # },
-    # 'elastic_net': {
-    #     'model' : ElasticNet(),
-    #     'grid_parameters': {
-    #         "max_iter": [1, 5, 10],
-    #         "alpha": [0.0001, 0.001, 0.01, 0.1, 1, 10, 100],
-    #         "l1_ratio": np.arange(0.0, 1.0, 0.1)
-    #     }
-    # },
-    # 'lasso' : {
-    #     'model' : Lasso(),
-    #     'grid_parameters': {
-    #         'alpha': np.logspace(-8, 8, 100)
-    #     }
-    # },
+    'ada_boost': {
+        'model' : AdaBoostRegressor(),
+        'grid_parameters': {
+            'learning_rate': [0.1, 0.01, 0.05],
+            'n_estimators': np.arange(3, 7, 2),
+            'loss' : ['linear', 'square', 'exponential']
+        }
+    },
+    'elastic_net': {
+        'model' : ElasticNet(),
+        'grid_parameters': {
+            "max_iter": [1, 5, 10],
+            "alpha": [0.001, 0.01, 0.1, 1, 10, 100],
+            "l1_ratio": np.arange(0.0, 1.0, 0.1)
+        }
+    },
+    'lasso' : {
+        'model' : Lasso(),
+        'grid_parameters': {
+            'alpha': np.logspace(-8, 8, 100)
+        }
+    },
     # 'ridge_cv': {
     #     'model' : RidgeCV(),
     #     'grid_parameters': {
