@@ -8,7 +8,6 @@ import datetime
 import xgboost as xgb
 import lightgbm as lgb
 import numpy as np
-from scipy.stats import loguniform
 
 PROJECT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_FOLDER = os.path.join(PROJECT_FOLDER, 'data')
@@ -63,60 +62,60 @@ MODELS_PARAM = {
         'model' : GradientBoostingRegressor(),
         'grid_parameters': {
             "max_depth": [3, 10, 30],
-            "max_leaf_nodes": [2, 5, 10, 20, 50, 100],
+            "max_leaf_nodes": [2, 5, 10, 20],
             "learning_rate": [0.1, 0.01, 0.05]
         }
     },
-    'ada_boost': {
-        'model' : AdaBoostRegressor(),
-        'grid_parameters': {
-            'learning_rate': [0.1, 0.01, 0.05],
-            'n_estimators': np.arange(3, 7, 2),
-            'loss' : ['linear', 'square', 'exponential']
-        }
-    },
-    'elastic_net': {
-        'model' : ElasticNet(),
-        'grid_parameters': {
-            "max_iter": [1, 5, 10],
-            "alpha": [0.0001, 0.001, 0.01, 0.1, 1, 10, 100],
-            "l1_ratio": np.arange(0.0, 1.0, 0.1)
-        }
-    },
-    'lasso' : {
-        'model' : Lasso(),
-        'grid_parameters': {
-            'alpha': np.logspace(-8, 8, 100)
-        }
-    },
-    'ridge_cv': {
-        'model' : RidgeCV(),
-        'grid_parameters': {
-            'alphas': [1e-3, 1e-2, 1e-1]
-        }
-    },
-    'svr': {
-        'model' : SVR(),
-        'grid_parameters': {
-            'C': [0.1, 1, 10, 100, 1000],  
-            'gamma': [1, 0.1, 0.01, 0.001, 0.0001], 
-            'kernel': ['rbf']
-        }
-    },
-    'linear_svr': {
-        'model' : LinearSVR(),
-        'grid_parameters': {
-            'C': [0.1, 1, 10, 100, 1000],  
-            'gamma': [1, 0.1, 0.01, 0.001, 0.0001], 
-            'kernel': ['rbf']
-        }
-    },
-    'nu_svr': {
-        'model' : NuSVR(),
-        'grid_parameters': {
-            'C': [0.1, 1, 10, 100, 1000],  
-            'gamma': [1, 0.1, 0.01, 0.001, 0.0001], 
-            'kernel': ['rbf']
-        }
-    },
+    # 'ada_boost': {
+    #     'model' : AdaBoostRegressor(),
+    #     'grid_parameters': {
+    #         'learning_rate': [0.1, 0.01, 0.05],
+    #         'n_estimators': np.arange(3, 7, 2),
+    #         'loss' : ['linear', 'square', 'exponential']
+    #     }
+    # },
+    # 'elastic_net': {
+    #     'model' : ElasticNet(),
+    #     'grid_parameters': {
+    #         "max_iter": [1, 5, 10],
+    #         "alpha": [0.0001, 0.001, 0.01, 0.1, 1, 10, 100],
+    #         "l1_ratio": np.arange(0.0, 1.0, 0.1)
+    #     }
+    # },
+    # 'lasso' : {
+    #     'model' : Lasso(),
+    #     'grid_parameters': {
+    #         'alpha': np.logspace(-8, 8, 100)
+    #     }
+    # },
+    # 'ridge_cv': {
+    #     'model' : RidgeCV(),
+    #     'grid_parameters': {
+    #         'alphas': [0.0001, 0.001, 0.01, 0.1, 1, 10, 100]
+    #     }
+    # },
+    # 'svr': {
+    #     'model' : SVR(),
+    #     'grid_parameters': {
+    #         'C': [0.1, 1, 10, 100, 1000],  
+    #         'gamma': [1, 0.1, 0.01, 0.001, 0.0001], 
+    #         'kernel': ['rbf']
+    #     }
+    # },
+    # 'linear_svr': {
+    #     'model' : LinearSVR(),
+    #     'grid_parameters': {
+    #         'C': [0.1, 1, 10, 100, 1000],  
+    #         'gamma': [1, 0.1, 0.01, 0.001, 0.0001], 
+    #         'kernel': ['rbf']
+    #     }
+    # },
+    # 'nu_svr': {
+    #     'model' : NuSVR(),
+    #     'grid_parameters': {
+    #         'C': [0.1, 1, 10, 100, 1000],  
+    #         'gamma': [1, 0.1, 0.01, 0.001, 0.0001], 
+    #         'kernel': ['rbf']
+    #     }
+    # }
 }

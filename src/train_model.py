@@ -62,9 +62,18 @@ def train(tracking_uri: str, models_params: dict, data : list) -> pd.DataFrame:
     score = []
     models = []
     rmse = []
-    i = 0
+    
     for model_param in models_params:
-        with mlflow.start_run():
+        print(model_param)
+        if model_param == 'xgboost':
+            mlflow.xgboost.autolog()
+        elif model_param == 'lightgbm':
+            mlflow.lightgbm.autolog()
+        else:
+            mlflow.sklearn.autolog()
+
+
+        with mlflow.start_run(run_name=model_param):
             grid_search = GridSearchCV(estimator=models_params[model_param]['model'],
                                     param_grid=models_params[model_param]['grid_parameters'],
                                     scoring='neg_root_mean_squared_error',
@@ -80,10 +89,9 @@ def train(tracking_uri: str, models_params: dict, data : list) -> pd.DataFrame:
             models.append(grid_search)
             rmse.append(np.sqrt(mean_squared_error(grid_search.predict(X_test), y_test)))
 
-            mlflow.log_param('best_param_%s' % i, grid_search.best_params_)
-            mlflow.log_param('rmse_%s' % i, np.sqrt(mean_squared_error(grid_search.predict(X_test), y_test)))
-            mlflow.log_param('score_%s' % i, grid_search.score(X_test, y_test))
-            i=i+1
+            mlflow.log_param(type(grid_search.best_estimator_).__name__+'_best_param', grid_search.best_params_)
+            mlflow.log_param(type(grid_search.best_estimator_).__name__+'_rmse', np.sqrt(mean_squared_error(grid_search.predict(X_test), y_test)))
+            mlflow.log_param(type(grid_search.best_estimator_).__name__+'_score', grid_search.score(X_test, y_test))
 
         df_score = pd.DataFrame(
             list(zip(name, rmse, score, models)),
@@ -96,6 +104,15 @@ def train(tracking_uri: str, models_params: dict, data : list) -> pd.DataFrame:
     return df_score
 
 def train_model_io(tracking_uri: str, models_params: dict, train_path : str, test_path, output_path: str):
+    """training function with io
+
+    Args:
+        tracking_uri (str): URI tracking
+        models_params (dict): params of all models
+        train_path (str): train path
+        test_path (_type_): test path
+        output_path (str): output path
+    """
     
     df_score, best_model_row = train_model(tracking_uri=tracking_uri,
                            models_params=models_params,
@@ -103,11 +120,19 @@ def train_model_io(tracking_uri: str, models_params: dict, train_path : str, tes
                            test_path=test_path
                         )
 
-    df_score.to_csv(os.path.join(output_path, 'df_model_score.csv'), index=False)
-    best_model_row.to_csv(os.path.join(output_path, 'best_row_model.csv'), index=False)
+    df_score.to_csv(os.path.join(output_path, 'df_model_score'), index=False)
+    best_model_row.to_csv(os.path.join(output_path, 'best_row_model'))
 
 
-def train_model(tracking_uri: str, models_params: dict, train_path : str, test_path):
+def train_model(tracking_uri: str, models_params: dict, train_path : str, test_path) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """training model
+
+    Args:
+        tracking_uri (str): URI tracking
+        models_params (dict): params of all models
+        train_path (str): train path
+        test_path (_type_): test path
+    """
 
     df_train, df_test = load_train_and_test_data(
         train_path=train_path,
